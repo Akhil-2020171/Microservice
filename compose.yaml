@@ -1,0 +1,53 @@
+services:
+  eureka:
+    build:
+      context: .
+      dockerfile: eureka/Dockerfile
+    container_name: eureka
+    ports:
+      - "8761:8761"
+    networks:
+      - microservices
+  service-one:
+    build:
+      context: .
+      dockerfile: service-one/Dockerfile
+    container_name: service-one
+    environment:
+      SPRING_APPLICATION_NAME: service-one
+      SPRING_CLOUD_NETFLIX_EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka:8761/eureka/
+    depends_on:
+      - eureka
+    networks:
+      - microservices
+  service-two:
+    build:
+      context: .
+      dockerfile: service-two/Dockerfile
+    container_name: service-two
+    environment:
+      SPRING_APPLICATION_NAME: service-two
+      SPRING_CLOUD_NETFLIX_EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka:8761/eureka/
+    depends_on:
+      - eureka
+    networks:
+      - microservices
+  api-gateway:
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8180:8180"
+    environment:
+      SPRING_APPLICATION_NAME: api-gateway
+      SPRING_CLOUD_NETFLIX_EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE: http://eureka:8761/eureka/
+    depends_on:
+      - eureka
+      - service-one
+      - service-two
+    networks:
+      - microservices
+networks:
+  microservices:
+    driver: bridge

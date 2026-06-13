@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: service-one
+              uri: lb://service-one
+              predicates:
+                - Path=/service-one/**
+
+            - id: service-two
+              uri: lb://service-two
+              predicates:
+                - Path=/service-two/**
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowedOrigins:
+                  - "http://localhost:8180"
+                allowedMethods:
+                  - GET
+                  - POST
+                  - PUT
+                  - DELETE
+                  - OPTIONS
+                allowedHeaders: "*"
+
+server:
+  port: 8180
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:8761/eureka/
