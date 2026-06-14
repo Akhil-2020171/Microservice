@@ -11,11 +11,15 @@ spring:
               uri: lb://service-one
               predicates:
                 - Path=/service-one/**
+              filters:
+                - StripPrefix=1 
 
             - id: service-two
               uri: lb://service-two
               predicates:
                 - Path=/service-two/**
+              filters:
+                - StripPrefix=1 
           globalcors:
             cors-configurations:
               '[/**]':

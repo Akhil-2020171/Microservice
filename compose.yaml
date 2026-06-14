@@ -1,5 +1,6 @@
 services:
   eureka:
+    image: eureka:latest
     build:
       context: .
       dockerfile: eureka/Dockerfile
@@ -9,6 +10,7 @@ services:
     networks:
       - microservices
   service-one:
+    image: service-one:latest
     build:
       context: .
       dockerfile: service-one/Dockerfile
@@ -21,6 +23,7 @@ services:
     networks:
       - microservices
   service-two:
+    image: service-two:latest
     build:
       context: .
       dockerfile: service-two/Dockerfile
@@ -33,6 +36,7 @@ services:
     networks:
       - microservices
   api-gateway:
+    image: api-gateway:latest
     build:
       context: .
       dockerfile: api-gateway/Dockerfile

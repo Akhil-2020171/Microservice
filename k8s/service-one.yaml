@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-one
+  labels:
+    app: service-one
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-one
+  template:
+    metadata:
+      labels:
+        app: service-one
+    spec:
+      containers:
+        - name: service-one
+          image: service-one:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_APPLICATION_NAME
+              value: service-one
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://eureka:8761/eureka/
+            - name: EUREKA_INSTANCE_PREFER_IP_ADDRESS
+              value: "true"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-one
+spec:
+  selector:
+    app: service-one
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+  type: ClusterIP
